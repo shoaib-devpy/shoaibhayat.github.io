@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Shoaib Hayat — AI Researcher & Blockchain Engineer</title>
+<meta name="description" content="Shoaib Hayat — AI Researcher, Blockchain Engineer, Tech Entrepreneur. CEO of Digital Code. IEEE Access Reviewer. ACM & IEEE Publications."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --bg:#01010a;
+  --bg2:#05050f;
+  --purple:#8b5cf6;
+  --purple2:#7c3aed;
+  --purple3:#a78bfa;
+  --cyan:#06b6d4;
+  --gold:#f59e0b;
+  --green:#10b981;
+  --text:#cbd5e1;
+  --muted:#475569;
+  --border:rgba(139,92,246,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--purple);border-radius:2px}
+
+/* ── Progress ── */
+#prog{position:fixed;top:0;left:0;height:1px;width:0%;z-index:9999;
+  background:linear-gradient(90deg,var(--purple),var(--cyan));
+  box-shadow:0 0 8px var(--purple)}
+
+/* ── Cursor ── */
+#cur-d,#cur-r{position:fixed;pointer-events:none;z-index:9998;border-radius:50%;transform:translate(-50%,-50%)}
+#cur-d{width:6px;height:6px;background:var(--purple)}
+#cur-r{width:28px;height:28px;border:1px solid rgba(139,92,246,.5);transition:width .2s,height .2s}
+
+/* ── Canvas ── */
+#cv{position:fixed;inset:0;z-index:0;width:100%;height:100%}
+
+/* ── Loader ── */
+#loader{position:fixed;inset:0;z-index:10000;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  transition:opacity .8s,visibility .8s}
+#loader.out{opacity:0;visibility:hidden}
+.ld-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,4vw,2rem);
+  font-weight:900;letter-spacing:10px;color:#fff;
+  text-shadow:0 0 60px rgba(139,92,246,.5)}
+.ld-bar{width:200px;height:1px;background:rgba(255,255,255,.06);overflow:hidden}
+.ld-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--cyan));
+  box-shadow:0 0 10px var(--purple);transition:width .06s}
+.ld-pct{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:3px;
+  color:var(--muted);text-transform:uppercase}
+
+/* ── Nav ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:36px 8vw;transition:padding .4s,background .4s}
+nav.sc{padding:18px 8vw;background:rgba(1,1,10,.85);backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(139,92,246,.06)}
+.n-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:.9rem;
+  letter-spacing:5px;color:rgba(255,255,255,.9)}
+.n-logo em{font-style:normal;color:var(--purple)}
+.n-links{display:flex;gap:40px;list-style:none}
+.n-links a{text-decoration:none;color:rgba(203,213,225,.4);font-size:.65rem;
+  letter-spacing:3px;text-transform:uppercase;font-weight:500;transition:color .3s}
+.n-links a:hover{color:rgba(203,213,225,.9)}
+.n-cta{text-decoration:none;font-size:.65rem;letter-spacing:3px;text-transform:uppercase;
+  font-weight:600;color:var(--purple3);border:1px solid rgba(139,92,246,.3);
+  padding:10px 22px;transition:all .3s}
+.n-cta:hover{background:rgba(139,92,246,.1);border-color:var(--purple)}
+
+/* ── Hero ── */
+#hero{position:relative;z-index:1;min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 8vw 60px}
+
+.h-pre{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:4px;
+  color:var(--purple);text-transform:uppercase;margin-bottom:28px;
+  display:flex;align-items:center;gap:10px;opacity:0;
+  animation:fU .7s .2s forwards}
+.h-pre::before{content:'';width:32px;height:1px;background:var(--purple)}
+.h-name{font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(4rem,12vw,11rem);line-height:.88;color:#fff;
+  letter-spacing:-3px;margin-bottom:8px;
+  opacity:0;animation:fU .8s .3s forwards}
+.h-name span{display:block}
+.h-name .ln2{
+  background:linear-gradient(135deg,var(--purple3) 0%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h-rule{width:60px;height:1px;background:rgba(139,92,246,.4);margin:32px 0;
+  opacity:0;animation:fU .6s .5s forwards}
+.h-role{font-size:clamp(.9rem,1.6vw,1.1rem);color:rgba(203,213,225,.5);
+  margin-bottom:52px;font-weight:300;font-family:'JetBrains Mono',monospace;letter-spacing:1px;
+  min-height:1.5em;opacity:0;animation:fU .7s .6s forwards}
+.h-role strong{color:var(--purple3);font-weight:400}
+.h-stats{display:flex;gap:56px;margin-bottom:56px;flex-wrap:wrap;
+  opacity:0;animation:fU .7s .7s forwards}
+.h-stat .n{font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;
+  color:#fff;line-height:1;letter-spacing:-1px}
+.h-stat .l{font-size:.58rem;letter-spacing:3px;color:var(--muted);
+  text-transform:uppercase;margin-top:6px;font-family:'JetBrains Mono',monospace}
+.h-btns{display:flex;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:fU .7s .85s forwards}
+.btn-p{text-decoration:none;padding:15px 36px;font-size:.72rem;
+  letter-spacing:3px;text-transform:uppercase;font-weight:700;
+  background:var(--purple);color:#fff;transition:all .3s;
+  box-shadow:0 0 40px rgba(139,92,246,.3)}
+.btn-p:hover{background:var(--purple2);box-shadow:0 0 60px rgba(139,92,246,.6);transform:translateY(-2px)}
+.btn-o{text-decoration:none;padding:15px 36px;font-size:.72rem;
+  letter-spacing:3px;text-transform:uppercase;font-weight:600;
+  border:1px solid rgba(139,92,246,.3);color:rgba(203,213,225,.7);transition:all .3s}
+.btn-o:hover{border-color:var(--purple);color:var(--purple3)}
+.h-scroll{position:absolute;bottom:40px;left:8vw;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  opacity:0;animation:fU .6s 1.2s forwards}
+.h-scroll p{font-size:.55rem;letter-spacing:4px;color:var(--muted);text-transform:uppercase;
+  writing-mode:vertical-rl;transform:rotate(180deg)}
+.h-scroll-line{width:1px;height:60px;
+  background:linear-gradient(to bottom,var(--purple),transparent);
+  animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:.3;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1)}}
+
+
+
+/* ── Socials strip ── */
+.h-socials{display:flex;gap:10px;margin-bottom:40px;
+  opacity:0;animation:fU .7s .75s forwards}
+.si{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(139,92,246,.18);text-decoration:none;color:rgba(203,213,225,.4);
+  transition:all .25s}
+.si svg{width:15px;height:15px;fill:currentColor}
+.si:hover{border-color:rgba(139,92,246,.5);color:var(--purple3)}
+
+/* ── Sections ── */
+section{position:relative;z-index:1}
+.w{max-width:1140px;margin:0 auto;padding:120px 8vw}
+.st{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:5px;
+  color:var(--purple);text-transform:uppercase;margin-bottom:16px}
+.sh{font-family:'Orbitron',sans-serif;
+  font-size:clamp(2rem,5vw,4rem);font-weight:900;color:#fff;
+  line-height:1;margin-bottom:64px;letter-spacing:-1px}
+.sh em{font-style:normal;
+  background:linear-gradient(135deg,var(--purple3),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+hr.div{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(139,92,246,.15),transparent);margin:0}
+
+/* ── About ── */
+.ab-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:80px;align-items:start}
+.ab-text p{font-size:.95rem;line-height:1.85;color:rgba(203,213,225,.65);margin-bottom:20px;text-align:justify}
+.ab-text strong{color:rgba(255,255,255,.85);font-weight:600}
+.ab-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.ab-badge{padding:7px 16px;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;
+  font-weight:600;text-decoration:none;border:1px solid;transition:all .25s}
+.ab-or{color:#a6ce39;border-color:rgba(166,206,57,.25);background:rgba(166,206,57,.04)}
+.ab-gs{color:#4285f4;border-color:rgba(66,133,244,.25);background:rgba(66,133,244,.04)}
+.ab-wo{color:#e8673c;border-color:rgba(232,103,60,.25);background:rgba(232,103,60,.04)}
+.ab-li{color:#0a66c2;border-color:rgba(10,102,194,.25);background:rgba(10,102,194,.04)}
+.ab-badge:hover{transform:translateY(-2px)}
+.ab-vols{display:flex;flex-direction:column;gap:8px;margin-top:24px}
+.ab-vol{font-size:.78rem;color:rgba(203,213,225,.5);display:flex;align-items:center;gap:10px}
+.ab-vol::before{content:'';width:20px;height:1px;background:var(--purple);flex-shrink:0}
+.ab-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(139,92,246,.08)}
+.met{background:var(--bg);padding:32px 28px;transition:background .3s}
+.met:hover{background:rgba(139,92,246,.04)}
+.met-n{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;
+  color:var(--purple3);line-height:1;letter-spacing:-1px}
+.met-l{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace}
+
+/* ── Experience ── */
+.exp-list{display:flex;flex-direction:column}
+.exp-item{display:grid;grid-template-columns:180px 1fr;gap:60px;
+  padding:52px 0;border-bottom:1px solid rgba(139,92,246,.07);position:relative}
+.exp-item::after{content:'';position:absolute;left:179px;top:0;bottom:0;width:1px;
+  background:rgba(139,92,246,.07)}
+.exp-meta{padding-top:3px}
+.exp-date{font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:rgba(203,213,225,.35);letter-spacing:1px;line-height:1.6}
+.exp-now{display:inline-block;margin-top:8px;font-size:.58rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--green);border:1px solid rgba(16,185,129,.25);
+  padding:2px 8px}
+.exp-content h3{font-size:.97rem;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.exp-content h4{font-size:.75rem;color:var(--muted);letter-spacing:1px;margin-bottom:14px}
+.exp-content p{font-size:.84rem;line-height:1.7;color:rgba(203,213,225,.55)}
+.exp-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.etag{font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 10px;border:1px solid rgba(139,92,246,.18);color:rgba(203,213,225,.4)}
+
+/* ── Research ── */
+.pub-grid{display:flex;flex-direction:column;gap:1px;background:rgba(139,92,246,.07)}
+.pub{display:grid;grid-template-columns:80px 1fr;gap:32px;
+  background:var(--bg);padding:32px;transition:background .3s;align-items:start}
+.pub:hover{background:rgba(139,92,246,.03)}
+.pub-yr{font-family:'Orbitron',monospace;font-size:.82rem;font-weight:700;
+  color:var(--purple3);padding-top:2px}
+.pub-yr small{display:block;font-size:.55rem;letter-spacing:2px;
+  color:var(--muted);text-transform:uppercase;margin-top:4px;font-family:'JetBrains Mono',monospace}
+.pub-title{font-size:.9rem;font-weight:600;color:#fff;line-height:1.5;margin-bottom:6px}
+.pub-authors{font-size:.75rem;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.pub-venue{display:inline-block;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 10px;font-weight:600;font-family:'JetBrains Mono',monospace}
+.v-acm{color:#60a5fa;border:1px solid rgba(96,165,250,.25);background:rgba(96,165,250,.04)}
+.v-ieee{color:#38bdf8;border:1px solid rgba(56,189,248,.25);background:rgba(56,189,248,.04)}
+.v-thesis{color:var(--purple3);border:1px solid rgba(139,92,246,.25);background:rgba(139,92,246,.04)}
+.v-wip{color:var(--gold);border:1px solid rgba(245,158,11,.25);background:rgba(245,158,11,.04)}
+.pub-wip{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pub-wip-tag{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(245,158,11,.3);padding:2px 8px;font-family:'JetBrains Mono',monospace}
+
+/* ── Reviewer box ── */
+.rev-box{margin-top:1px;background:rgba(232,103,60,.03);
+  border:1px solid rgba(232,103,60,.12);padding:40px}
+.rev-head{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;
+  color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:24px;
+  display:flex;align-items:center;gap:12px}
+.rev-head::after{content:'';flex:1;height:1px;background:rgba(232,103,60,.15)}
+.rev-count{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;
+  color:#fb923c;line-height:1}
+.rev-list{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:24px;
+  background:rgba(232,103,60,.05)}
+.rev-item{padding:14px 18px;border-bottom:1px solid rgba(232,103,60,.06);
+  border-right:1px solid rgba(232,103,60,.06)}
+.rev-item:nth-child(even){border-right:none}
+.rev-num{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:rgba(251,146,60,.4);
+  margin-bottom:4px;letter-spacing:2px}
+.rev-title{font-size:.75rem;color:rgba(203,213,225,.65);line-height:1.45;margin-bottom:4px}
+.rev-date{font-size:.62rem;color:rgba(203,213,225,.3);font-family:'JetBrains Mono',monospace}
+
+/* ── Research profiles ── */
+.rp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(139,92,246,.08);margin-top:64px}
+.rp{background:var(--bg);padding:32px 28px;text-decoration:none;
+  display:flex;flex-direction:column;align-items:flex-start;gap:10px;transition:background .3s}
+.rp:hover{background:rgba(139,92,246,.04)}
+.rp-ico{font-size:1.4rem}
+.rp-name{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;
+  color:#fff;text-transform:uppercase}
+.rp-id{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.rp-tag{font-size:.55rem;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;
+  font-family:'JetBrains Mono',monospace}
+
+/* ── Skills ── */
+.sk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(139,92,246,.07)}
+.sk-group{background:var(--bg);padding:32px}
+.sk-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:3px;
+  text-transform:uppercase;color:var(--purple3);margin-bottom:20px;
+  padding-bottom:12px;border-bottom:1px solid rgba(139,92,246,.1)}
+.sk-tags{display:flex;flex-wrap:wrap;gap:7px}
+.sk{font-size:.72rem;padding:5px 12px;border:1px solid rgba(139,92,246,.15);
+  color:rgba(203,213,225,.55);transition:all .2s;letter-spacing:.3px}
+.sk:hover{border-color:rgba(139,92,246,.4);color:rgba(203,213,225,.85)}
+.sk-py{border-color:rgba(77,171,247,.2);color:rgba(77,171,247,.65)}
+.sk-js{border-color:rgba(255,212,59,.2);color:rgba(255,212,59,.65)}
+.sk-ai{border-color:rgba(255,107,107,.2);color:rgba(255,107,107,.65)}
+.sk-bc{border-color:rgba(245,158,11,.2);color:rgba(245,158,11,.65)}
+.sk-cl{border-color:rgba(56,189,248,.2);color:rgba(56,189,248,.65)}
+
+/* ── GitHub ── */
+.gh-wrap{background:rgba(22,27,34,.5);border:1px solid rgba(48,54,61,.6)}
+.gh-top{padding:32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  border-bottom:1px solid rgba(48,54,61,.4)}
+.gh-av{width:56px;height:56px;border-radius:50%;background:#21262d;
+  border:1px solid rgba(139,92,246,.3);flex-shrink:0}
+.gh-nn{font-weight:700;color:#e6edf3;font-size:.95rem}
+.gh-un{font-size:.75rem;color:#8b949e;margin-top:2px}
+.gh-bio{font-size:.8rem;color:#c9d1d9;margin-top:4px}
+.gh-nums{display:flex;gap:24px;margin-top:8px;flex-wrap:wrap}
+.gh-nums span{font-size:.72rem;color:#8b949e}
+.gh-nums strong{color:#58a6ff}
+.gh-go{margin-left:auto;text-decoration:none;font-size:.65rem;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(203,213,225,.4);border:1px solid rgba(48,54,61,.6);
+  padding:8px 16px;display:flex;align-items:center;gap:7px;transition:all .3s}
+.gh-go:hover{border-color:rgba(139,92,246,.4);color:var(--purple3)}
+.repos{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(48,54,61,.4)}
+.repo{background:rgba(13,17,23,.8);padding:24px;text-decoration:none;display:block;transition:background .3s}
+.repo:hover{background:rgba(22,27,34,.9)}
+.repo-name{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:500;
+  color:#58a6ff;margin-bottom:8px}
+.repo-desc{font-size:.75rem;color:#8b949e;margin-bottom:14px;line-height:1.5;min-height:34px}
+.repo-foot{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.repo-lang{font-size:.68rem;color:#c9d1d9;display:flex;align-items:center;gap:5px}
+.rd{width:8px;height:8px;border-radius:50%}
+.repo-stars{font-size:.68rem;color:#8b949e}
+.repo-ago{font-size:.62rem;color:#6e7681;margin-left:auto}
+.repo-topics{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.rt{font-size:.6rem;padding:2px 7px;background:rgba(56,139,253,.1);
+  color:#58a6ff;border:1px solid rgba(56,139,253,.2)}
+
+/* ── LinkedIn ── */
+.badge-base__link.LI-simple-link{display:none!important}
+.li-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(139,92,246,.08)}
+.li-badge-box{background:var(--bg);padding:40px;display:flex;flex-direction:column;
+  align-items:flex-start;gap:20px}
+.li-info-box{background:var(--bg);padding:40px}
+.li-info-box h3{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(203,213,225,.4);font-family:'JetBrains Mono',monospace;margin-bottom:20px}
+.li-links{list-style:none;display:flex;flex-direction:column;gap:0}
+.li-links a{text-decoration:none;color:rgba(203,213,225,.55);font-size:.84rem;
+  padding:14px 0;border-bottom:1px solid rgba(139,92,246,.07);
+  display:flex;align-items:center;justify-content:space-between;transition:color .25s}
+.li-links a:hover{color:rgba(203,213,225,.9)}
+.li-links a::after{content:'→';color:var(--purple3);opacity:0;transition:opacity .25s,transform .25s;transform:translateX(-8px)}
+.li-links a:hover::after{opacity:1;transform:none}
+.li-stats{display:flex;gap:32px;margin-top:28px;padding-top:24px;
+  border-top:1px solid rgba(139,92,246,.07)}
+.li-stat .v{font-family:'Orbitron',sans-serif;font-size:1.4rem;font-weight:700;
+  color:var(--purple3)}
+.li-stat .l{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);
+  margin-top:4px;font-family:'JetBrains Mono',monospace}
+.li-btn{text-decoration:none;padding:12px 24px;font-size:.68rem;letter-spacing:2px;
+  text-transform:uppercase;font-weight:700;background:#0a66c2;color:#fff;transition:all .3s}
+.li-btn:hover{background:#004182;box-shadow:0 0 24px rgba(10,102,194,.4)}
+.li-notice{font-size:.75rem;color:rgba(203,213,225,.4);line-height:1.6;
+  padding:16px;background:rgba(245,158,11,.03);border:1px solid rgba(245,158,11,.1)}
+.li-notice a{color:var(--purple3);text-decoration:none}
+
+/* ── Awards ── */
+.aw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(245,158,11,.08)}
+.aw{background:var(--bg);padding:36px 28px;transition:background .3s}
+.aw:hover{background:rgba(245,158,11,.03)}
+.aw-ico{font-size:1.6rem;margin-bottom:16px;display:block}
+.aw-year{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:2px;
+  color:rgba(245,158,11,.5);margin-bottom:8px}
+.aw-title{font-size:.88rem;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.3}
+.aw-org{font-size:.75rem;color:var(--muted)}
+.conf-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:rgba(139,92,246,.07);margin-top:1px}
+.conf{background:var(--bg);padding:24px 20px}
+.conf-name{font-size:.84rem;font-weight:600;color:#fff;margin-bottom:4px}
+.conf-loc{font-size:.72rem;color:var(--muted)}
+.edu-list{display:flex;flex-direction:column;gap:1px;background:rgba(139,92,246,.07);margin-top:64px}
+.edu{background:var(--bg);padding:32px;display:grid;grid-template-columns:160px 1fr;gap:32px}
+.edu-date{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);
+  letter-spacing:1px;padding-top:3px}
+.edu-deg{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:4px}
+.edu-uni{font-size:.78rem;color:var(--muted)}
+.edu-uni a{color:var(--purple3);text-decoration:none}
+
+/* ── Connect ── */
+#connect .w{display:flex;flex-direction:column}
+.ct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(139,92,246,.07);margin-top:64px}
+.ct-link{background:var(--bg);padding:36px 28px;text-decoration:none;
+  display:flex;flex-direction:column;gap:12px;transition:background .3s;border:none}
+.ct-link:hover{background:rgba(139,92,246,.04)}
+.ct-link svg{width:22px;height:22px;fill:currentColor}
+.ct-link .ct-label{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);font-family:'JetBrains Mono',monospace}
+.ct-link .ct-val{font-size:.9rem;font-weight:600;color:rgba(203,213,225,.8)}
+.ct-li{color:#0a66c2}.ct-em{color:var(--purple3)}.ct-gh{color:#e6edf3}
+.ct-or{color:#a6ce39}.ct-gs{color:#4285f4}.ct-wo{color:#e8673c}
+.ct-info{display:flex;gap:40px;flex-wrap:wrap;margin-top:48px;
+  padding-top:32px;border-top:1px solid rgba(139,92,246,.07)}
+.ct-inf{font-size:.78rem;color:rgba(203,213,225,.35);display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace}
+.ct-inf strong{color:rgba(203,213,225,.65);font-weight:400}
+
+/* ── Footer ── */
+footer{position:relative;z-index:1;padding:28px 8vw;
+  border-top:1px solid rgba(139,92,246,.07);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer p{font-size:.65rem;color:rgba(71,85,105,.7);letter-spacing:1px;
+  font-family:'JetBrains Mono',monospace}
+footer strong{color:rgba(203,213,225,.4);font-weight:400}
+
+/* ── Reveal ── */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+@keyframes fU{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ── Hero Photo ── */
+.h-photo-wrap{
+  position:absolute;right:22vw;top:22%;transform:translateY(-50%);
+  width:clamp(380px,42vw,640px);
+  opacity:0;animation:fU .9s 1.0s forwards;
+  pointer-events:none;z-index:2}
+.h-photo-frame{position:relative;display:inline-block;width:100%}
+.h-photo-img{
+  width:100%;height:auto;display:block;
+  opacity:.88;
+  filter:drop-shadow(0 0 36px rgba(139,92,246,.3)) drop-shadow(0 0 70px rgba(6,182,212,.12));
+  -webkit-mask-image:linear-gradient(to bottom,black 55%,transparent 100%);
+  mask-image:linear-gradient(to bottom,black 55%,transparent 100%)}
+.hpc{
+  position:absolute;width:22px;height:22px;
+  border-style:solid;border-color:rgba(167,139,250,.65);
+  transition:border-color .3s}
+.hpc-tl{top:-8px;left:-8px;border-width:2px 0 0 2px;
+  box-shadow:-3px -3px 10px rgba(139,92,246,.35)}
+.hpc-tr{top:-8px;right:-8px;border-width:2px 2px 0 0;
+  box-shadow:3px -3px 10px rgba(139,92,246,.35)}
+.hpc-bl{bottom:-8px;left:-8px;border-width:0 0 2px 2px;
+  box-shadow:-3px 3px 10px rgba(6,182,212,.25)}
+.hpc-br{bottom:-8px;right:-8px;border-width:0 2px 2px 0;
+  box-shadow:3px 3px 10px rgba(6,182,212,.25)}
+
+/* ── Responsive ── */
+@media(max-width:960px){
+  .h-photo-wrap{display:none}
+  .ab-grid{grid-template-columns:1fr;gap:48px}
+  .li-wrap{grid-template-columns:1fr}
+  .aw-grid,.conf-row{grid-template-columns:repeat(2,1fr)}
+  .sk-grid{grid-template-columns:repeat(2,1fr)}
+  .rp-row{grid-template-columns:repeat(2,1fr)}
+  .repos{grid-template-columns:repeat(2,1fr)}
+  .ct-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:680px){
+  nav{padding:18px 6vw}.n-links,.n-cta{display:none}
+  .w{padding:80px 6vw}
+  #hero{padding:0 6vw 60px}
+  .exp-item{grid-template-columns:1fr;gap:8px}.exp-item::after{display:none}
+  .edu{grid-template-columns:1fr;gap:8px}
+  .aw-grid,.conf-row,.sk-grid,.rp-row,.repos,.ct-grid{grid-template-columns:1fr}
+  .rev-list{grid-template-columns:1fr}
+  .h-stats{gap:32px}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<div id="cur-r"></div>
+<div id="cur-d"></div>
+<canvas id="cv"></canvas>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-title">SHOAIB HAYAT</div>
+  <div class="ld-bar"><div class="ld-fill" id="ldf"></div></div>
+  <div class="ld-pct" id="ldp">Loading...</div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="n-logo">S<em>H</em></div>
+  <ul class="n-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#github">GitHub</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+  <a href="mailto:ceo@digitalcode.dev" class="n-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <h1 class="h-name">
+    <span>Shoaib</span>
+    <span class="ln2">Hayat</span>
+  </h1>
+  <div class="h-rule"></div>
+  <p class="h-role"><strong id="tw"></strong><span id="cb" style="display:inline-block;width:2px;height:1em;background:var(--purple);vertical-align:middle;margin-left:2px;animation:pulse 1s steps(1) infinite"></span></p>
+
+  <div class="h-socials">
+    <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="si" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+    <a href="https://github.com/shoaib-devpy" target="_blank" class="si" title="GitHub"><svg viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
+    <a href="https://orcid.org/0000-0002-2847-3147" target="_blank" class="si" title="ORCID"><svg viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947-.947-.431-.947-.947.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.434h2.297c2.359 0 3.9-1.303 3.9-3.722s-1.491-3.712-3.9-3.712h-2.297z"/></svg></a>
+    <a href="https://scholar.google.com/citations?user=DYCBADQAAAAJ" target="_blank" class="si" title="Google Scholar"><svg viewBox="0 0 24 24"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg></a>
+    <a href="https://www.webofscience.com/wos/author/record/R-8137-2019" target="_blank" class="si" title="Web of Science"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>
+    <a href="mailto:ceo@digitalcode.dev" class="si" title="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+  </div>
+
+  <div class="h-stats">
+    <div class="h-stat"><div class="n" data-t="8">0</div><div class="l">Publications</div></div>
+    <div class="h-stat"><div class="n" data-t="18">0</div><div class="l">WoS Reviews</div></div>
+    <div class="h-stat"><div class="n" data-t="8">0</div><div class="l">Years Exp.</div></div>
+    <div class="h-stat"><div class="n" data-t="4">0</div><div class="l">Countries</div></div>
+  </div>
+
+  <div class="h-btns">
+    <a href="#research" class="btn-p">View Research</a>
+    <a href="#connect"  class="btn-o">Get In Touch</a>
+  </div>
+
+  <div class="h-scroll">
+    <div class="h-scroll-line"></div>
+    <p>Scroll</p>
+  </div>
+
+  <!-- Photo -->
+  <div class="h-photo-wrap">
+    <div class="h-photo-frame">
+      <span class="hpc hpc-tl"></span>
+      <span class="hpc hpc-tr"></span>
+      <span class="hpc hpc-bl"></span>
+      <span class="hpc hpc-br"></span>
+      <img src="Shoaib_Hayat_Photo-removebg-preview.png" alt="Shoaib Hayat" class="h-photo-img"/>
+    </div>
+  </div>
+
+</section>
+
+<hr class="div"/>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="w">
+    <div class="rv"><h2 class="sh">Who I <em>Am</em></h2></div>
+    <div class="ab-grid">
+      <div class="rv">
+        <div class="ab-text">
+          <p>I am <strong>Shoaib Hayat</strong>, a researcher, software engineer, and technology entrepreneur operating across <strong>Dubai, United Arab Emirates</strong>, and <strong>Islamabad, Pakistan</strong>. I hold a <strong>Master of Engineering in Computer Science</strong> from Donghua University, Shanghai, China, and a <strong>Bachelor of Science (Hons.) in Computer Science</strong> from the University of Lahore, Pakistan.</p>
+          <p>My work focuses on the convergence of <strong>Artificial Intelligence</strong>, <strong>Blockchain Technology</strong>, <strong>Web3</strong>, and <strong>Enterprise Software Engineering</strong>, where I design and lead the development of innovative, scalable, and secure digital solutions. As the <strong>CEO &amp; Founder of Digital Code (SMC-Pvt) Ltd.</strong> and <strong>IT Manager &amp; Software Engineering Advisor at IXOLITE DMCC, Dubai</strong>, I oversee the architecture, development, and deployment of AI-powered and blockchain-enabled platforms that address real-world business and technological challenges.</p>
+          <p>Alongside my industry work, I am actively engaged in academic research. I serve as a <strong>Peer Reviewer for Clarivate Web of Science-indexed journals</strong>, including IEEE Access, where I have completed more than 18 peer reviews. My research has been published in leading IEEE and ACM venues, with interests spanning <strong>Artificial Intelligence, Federated Learning, Blockchain, Cybersecurity, Smart Healthcare</strong>, and <strong>Human Activity Recognition (HAR)</strong>.</p>
+          <p>Beyond technology and research, I am committed to leadership, public service, and community development. I serve as an <strong>Executive Member of the Youth Parliament of Pakistan</strong> and volunteer with the <strong>United Nations, Geneva</strong>, contributing to initiatives focused on innovation, education, youth empowerment, and sustainable development.</p>
+          <p>My mission is to bridge cutting-edge research with practical innovation, creating technologies that drive <strong>digital transformation</strong>, strengthen <strong>security and privacy</strong>, and deliver meaningful impact for businesses and society.</p>
+        </div>
+        <div class="ab-badges">
+          <a href="https://orcid.org/0000-0002-2847-3147" target="_blank" class="ab-badge ab-or">ORCID</a>
+          <a href="https://scholar.google.com/citations?user=DYCBADQAAAAJ" target="_blank" class="ab-badge ab-gs">Google Scholar</a>
+          <a href="https://www.webofscience.com/wos/author/record/R-8137-2019" target="_blank" class="ab-badge ab-wo">Web of Science</a>
+          <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="ab-badge ab-li">LinkedIn</a>
+        </div>
+        <div class="ab-vols">
+          <div class="ab-vol">🇺🇳 UN Volunteer — Geneva, Switzerland (2023–Present)</div>
+          <div class="ab-vol">🏛️ Youth Parliament of Pakistan — Executive Member (2018–Present)</div>
+        </div>
+      </div>
+      <div class="rv" style="transition-delay:.1s">
+        <div class="ab-metrics">
+          <div class="met"><div class="met-n">8</div><div class="met-l">Publications</div></div>
+          <div class="met"><div class="met-n">18+</div><div class="met-l">WoS Reviews</div></div>
+          <div class="met"><div class="met-n">4</div><div class="met-l">Awards</div></div>
+          <div class="met"><div class="met-n">4</div><div class="met-l">Countries</div></div>
+          <div class="met"><div class="met-n">2</div><div class="met-l">Degrees</div></div>
+          <div class="met"><div class="met-n">8+</div><div class="met-l">Years Eng.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="w">
+    <div class="rv"><h2 class="sh">Career <em>Journey</em></h2></div>
+    <div class="exp-list">
+      <div class="exp-item rv">
+        <div class="exp-meta">
+          <div class="exp-date">Mar 2025<br/>— Present</div>
+          <div class="exp-now">Current</div>
+        </div>
+        <div class="exp-content">
+          <h3>IT Manager / Software Engineering Advisor</h3>
+          <h4>IXOLITE DMCC · Dubai, UAE 🇦🇪</h4>
+          <p>High-level technical advisory for UAE-based fintech — system architecture, blockchain integrations, AI/ML components and cloud platform strategy.</p>
+          <div class="exp-tags"><span class="etag">Blockchain</span><span class="etag">AI/ML</span><span class="etag">Cloud</span><span class="etag">Fintech</span><span class="etag">Microservices</span></div>
+        </div>
+      </div>
+      <div class="exp-item rv" style="transition-delay:.06s">
+        <div class="exp-meta">
+          <div class="exp-date">Jun 2021<br/>— Present</div>
+          <div class="exp-now">Current</div>
+        </div>
+        <div class="exp-content">
+          <h3>CEO / Founder &amp; Software Engineer</h3>
+          <h4>Digital Code (SMC-Pvt) Ltd. · Islamabad, Pakistan 🇵🇰</h4>
+          <p>Founded and lead a tech company specialising in blockchain, AI platforms and Web3 infrastructure. Architecting scalable backend systems with Python FastAPI, TensorFlow, PyTorch and Web3 frameworks.</p>
+          <div class="exp-tags"><span class="etag">Python</span><span class="etag">FastAPI</span><span class="etag">Web3</span><span class="etag">TensorFlow</span><span class="etag">PyTorch</span><span class="etag">Solidity</span></div>
+        </div>
+      </div>
+      <div class="exp-item rv" style="transition-delay:.12s">
+        <div class="exp-meta"><div class="exp-date">Jan 2020<br/>— Apr 2020</div></div>
+        <div class="exp-content">
+          <h3>Support Engineer — Cloud O365</h3>
+          <h4>Wicresoft (Joint Venture of Microsoft) · Shanghai, China 🇨🇳</h4>
+          <p>Diagnostics and troubleshooting across Office 365, Exchange Online, SharePoint and Azure Active Directory. Improved platform reliability and security for enterprise clients.</p>
+          <div class="exp-tags"><span class="etag">Azure AD</span><span class="etag">O365</span><span class="etag">Exchange Online</span><span class="etag">Cloud Security</span></div>
+        </div>
+      </div>
+      <div class="exp-item rv" style="transition-delay:.18s">
+        <div class="exp-meta"><div class="exp-date">Oct 2018<br/>— Dec 2019</div></div>
+        <div class="exp-content">
+          <h3>Software Engineer</h3>
+          <h4>BAAS (Blockchain as a Service) TRY · Shanghai, China 🇨🇳</h4>
+          <p>Designed and developed Python-based blockchain applications, smart contracts and integration APIs. Worked on consensus models and decentralised infrastructure.</p>
+          <div class="exp-tags"><span class="etag">Python</span><span class="etag">Smart Contracts</span><span class="etag">Blockchain</span><span class="etag">REST APIs</span></div>
+        </div>
+      </div>
+      <div class="exp-item rv" style="transition-delay:.24s">
+        <div class="exp-meta"><div class="exp-date">Sep 2018<br/>— Mar 2019</div></div>
+        <div class="exp-content">
+          <h3>Teaching Assistant — Information Security</h3>
+          <h4>Donghua University · Shanghai, China 🇨🇳</h4>
+          <p>Lab sessions on cybersecurity, network security, encryption and penetration testing. Contributed to academic research on cybersecurity.</p>
+          <div class="exp-tags"><span class="etag">Cybersecurity</span><span class="etag">Network Security</span><span class="etag">Research</span></div>
+        </div>
+      </div>
+      <div class="exp-item rv" style="transition-delay:.30s">
+        <div class="exp-meta"><div class="exp-date">Aug 2015<br/>— Oct 2015</div></div>
+        <div class="exp-content">
+          <h3>Network Engineering Intern</h3>
+          <h4>Pakistan Telecommunication Company (PTCL) · Islamabad 🇵🇰</h4>
+          <p>Telecom network diagnostics, system troubleshooting and technical documentation in a real-world ICT infrastructure.</p>
+          <div class="exp-tags"><span class="etag">Telecom</span><span class="etag">Networking</span><span class="etag">Diagnostics</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="w">
+    <div class="rv"><h2 class="sh"><em>Publications</em></h2></div>
+    <div class="pub-grid rv">
+
+      <div class="pub">
+        <div class="pub-yr">2027<small>In Progress</small></div>
+        <div>
+          <div class="pub-wip"><span class="pub-wip-tag">Working On It</span></div>
+          <div class="pub-title">Advanced Federated Learning Framework for Human Activity Recognition (HAR) in Smart Healthcare Systems, Utilizing Blockchain Technology to Enhance Security and Privacy</div>
+          <div class="pub-authors">Shoaib Hayat</div>
+          <span class="pub-venue v-wip">Upcoming</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2026<small>In Process</small></div>
+        <div>
+          <div class="pub-wip"><span class="pub-wip-tag">In Process</span></div>
+          <div class="pub-title">Blockchain-Enabled Healthcare: A Comprehensive Review of Applications and Opportunities</div>
+          <div class="pub-authors">Shoaib Hayat</div>
+          <span class="pub-venue v-wip">Upcoming</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2023</div>
+        <div>
+          <div class="pub-title">Smart Scan: An Approach to Detect Denial of Service Vulnerability in Ethereum Smart Contracts</div>
+          <div class="pub-authors">Shoaib Hayat, Janjua, H. A., &amp; Yue, L.</div>
+          <span class="pub-venue v-acm">ACM · EITCE '23</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2023</div>
+        <div>
+          <div class="pub-title">Fire Classification Using Attention-Based Deep-CNN in Digital Images</div>
+          <div class="pub-authors">Shoaib Hayat, Ud, D. S., Muhammad, S., Han, F., &amp; Iqbal, H. M. A.</div>
+          <span class="pub-venue v-ieee">IEEE · ICEEE</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2020</div>
+        <div>
+          <div class="pub-title">GAWA — A Feature Selection Method for Hybrid Sentiment Classification</div>
+          <div class="pub-authors">Shoaib Hayat, Rasool, A., Tao, R., &amp; Kamyab, M.</div>
+          <span class="pub-venue v-ieee">IEEE Access · Vol. 8, pp. 191850–191861</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2020</div>
+        <div>
+          <div class="pub-title">Research on Intrusion Detection System Using Different Machine Learning Algorithms</div>
+          <div class="pub-authors">Shoaib Hayat &amp; Li Yue</div>
+          <span class="pub-venue v-thesis">Master Thesis · Donghua University, Shanghai</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2019</div>
+        <div>
+          <div class="pub-title">Comparative Analysis of VANET's Routing Protocol Classes: An Overview of Existing Routing Protocol Classes and Futuristic Challenges</div>
+          <div class="pub-authors">Shoaib Hayat, Liu, X., Li, Y., &amp; Zhou, Y.</div>
+          <span class="pub-venue v-ieee">IEEE · ICET</span>
+        </div>
+      </div>
+
+      <div class="pub">
+        <div class="pub-yr">2018</div>
+        <div>
+          <div class="pub-title">Automatic Recovery of Broken Links Using Information Retrieval Techniques</div>
+          <div class="pub-authors">Shoaib Hayat, Li, Y., &amp; Riaz, M.</div>
+          <span class="pub-venue v-acm">ACM · NLPIR '18</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviewer box -->
+    <div class="rev-box rv">
+      <div class="rev-head">Peer Reviewer — Clarivate Web of Science (IEEE Access) · 2023–Present</div>
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px">
+        <div class="rev-count">18+</div>
+        <div style="font-size:.72rem;color:rgba(251,146,60,.6);font-family:'JetBrains Mono',monospace;letter-spacing:2px">Reviews Completed</div>
+      </div>
+      <div class="rev-list">
+        <div class="rev-item"><div class="rev-num">01 · May 2026</div><div class="rev-title">Enhancing Robustness of Reward Models via Hidden Equilibrium Balancing in Large Language Models</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">02 · May 2026</div><div class="rev-title">Deep MCRan: Hybrid Analysis-based Ransomware Detection Using Multi-Channel Data Fusion</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">03 · May 2026</div><div class="rev-title">Research on Language Assessment Based on Multiple Physiological Features</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">04 · May 2026</div><div class="rev-title">Assessment of 3D Pose Estimation Accuracy for Fall Movements Using Video Analysis</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">05 · Apr 2026</div><div class="rev-title">Hybrid-Oxide Two-Stacked-FET CMOS Power Amplifier with Optimized Gate Impedance for X-Band Applications</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">06 · Apr 2026</div><div class="rev-title">A Unified Social Media Framework for Real-Time Post-Comparison and RoBERTa Sentiment Analysis</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">07 · Apr 2026</div><div class="rev-title">Optimized MS-SIDM: A Context-Aware Sensitive Information Detection Framework via LLM Reasoning and Non-Linear Risk Quantification</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">08 · Mar 2026</div><div class="rev-title">Large Language Models in Cybersecurity: A Systematic Mapping Study and a MITRE-Based Threat Matrix</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">09 · Mar 2026</div><div class="rev-title">An Improved YOLOv5s Algorithm Based on Dual Attention Mechanism for Steel Surface Defects Detection</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">10 · May 2025</div><div class="rev-title">Optimizing Machine Learning-Based Ovarian Cancer Prediction Through Normalization Strategies</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">11 · May 2025</div><div class="rev-title">AE-CNN Ensemble: A Novel Architecture for Effective Network Intrusion Detection and Classification</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">12 · May 2025</div><div class="rev-title">HSF: A Hybrid Machine Learning Framework for Dual-Plane DDoS Detection in Software-Defined Networks</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">13 · Apr 2025</div><div class="rev-title">Program Anomalies Detection by Fuzzy Conceptual Learning from Correct Traces in a Bounded Domain</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">14 · Apr 2025</div><div class="rev-title">Secure Lattice-Based Signature Scheme for Internet of Things Applications</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">15 · Mar 2025</div><div class="rev-title">Impacts of Generative AI Interventions on Task Performance and Collaborative Knowledge Construction Processes in Online Collaborative Programming</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">16 · Sep 2024</div><div class="rev-title">Optimizing Secure AI Lifecycle Model Management With Innovative Generative AI Strategies</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">17 · Sep 2024</div><div class="rev-title">A Framework for Mitigation of Seller and Buyer's Dilemma with Transaction History</div><div class="rev-date">IEEE Access</div></div>
+        <div class="rev-item"><div class="rev-num">18+</div><div class="rev-title">Ongoing reviews across AI, Cybersecurity, Blockchain and Healthcare domains</div><div class="rev-date">IEEE Access · Clarivate WoS</div></div>
+      </div>
+    </div>
+
+    <!-- Research profiles -->
+    <div class="rp-row rv">
+      <a href="https://orcid.org/0000-0002-2847-3147" target="_blank" class="rp">
+        <span class="rp-ico">🟢</span>
+        <div class="rp-name">ORCID</div>
+        <div class="rp-id">0000-0002-2847-3147</div>
+        <span class="rp-tag" style="color:var(--green);border:1px solid rgba(16,185,129,.25)">Live</span>
+      </a>
+      <a href="https://scholar.google.com/citations?user=DYCBADQAAAAJ" target="_blank" class="rp">
+        <span class="rp-ico">🎓</span>
+        <div class="rp-name">Google Scholar</div>
+        <div class="rp-id">Citations &amp; h-index</div>
+        <span class="rp-tag" style="color:var(--gold);border:1px solid rgba(245,158,11,.25)">View Profile</span>
+      </a>
+      <a href="https://www.webofscience.com/wos/author/record/R-8137-2019" target="_blank" class="rp">
+        <span class="rp-ico">🔬</span>
+        <div class="rp-name">Web of Science</div>
+        <div class="rp-id">R-8137-2019</div>
+        <span class="rp-tag" style="color:var(--gold);border:1px solid rgba(245,158,11,.25)">View Profile</span>
+      </a>
+      <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="rp">
+        <span class="rp-ico">💼</span>
+        <div class="rp-name">LinkedIn</div>
+        <div class="rp-id">iamshoaibhayat</div>
+        <span class="rp-tag" style="color:#0a66c2;border:1px solid rgba(10,102,194,.25)">Connect</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="w">
+    <div class="rv"><h2 class="sh">Technical <em>Stack</em></h2></div>
+    <div class="sk-grid rv">
+      <div class="sk-group">
+        <div class="sk-label">Languages</div>
+        <div class="sk-tags">
+          <span class="sk sk-py">Python</span><span class="sk sk-js">JavaScript</span>
+          <span class="sk">Solidity</span><span class="sk">HTML / CSS</span>
+        </div>
+      </div>
+      <div class="sk-group">
+        <div class="sk-label">AI / Machine Learning</div>
+        <div class="sk-tags">
+          <span class="sk sk-ai">TensorFlow</span><span class="sk sk-ai">PyTorch</span>
+          <span class="sk sk-ai">Keras</span><span class="sk sk-ai">Scikit-learn</span>
+          <span class="sk sk-ai">Pandas</span><span class="sk sk-ai">NumPy</span>
+        </div>
+      </div>
+      <div class="sk-group">
+        <div class="sk-label">Blockchain / Web3</div>
+        <div class="sk-tags">
+          <span class="sk sk-bc">Web3.py</span><span class="sk sk-bc">Solana.py</span>
+          <span class="sk sk-bc">Smart Contracts</span><span class="sk sk-bc">Ethereum</span>
+          <span class="sk sk-bc">DeFi</span><span class="sk sk-bc">NFT</span>
+        </div>
+      </div>
+      <div class="sk-group">
+        <div class="sk-label">Backend &amp; APIs</div>
+        <div class="sk-tags">
+          <span class="sk">FastAPI</span><span class="sk">Flask</span>
+          <span class="sk">Django</span><span class="sk">Django REST</span>
+          <span class="sk">SQLAlchemy</span>
+        </div>
+      </div>
+      <div class="sk-group">
+        <div class="sk-label">Cloud &amp; DevOps</div>
+        <div class="sk-tags">
+          <span class="sk sk-cl">Docker</span><span class="sk sk-cl">Git / GitHub</span>
+          <span class="sk sk-cl">Azure</span><span class="sk sk-cl">Microservices</span>
+          <span class="sk sk-cl">Agile</span>
+        </div>
+      </div>
+      <div class="sk-group">
+        <div class="sk-label">Professional Memberships</div>
+        <div class="sk-tags" style="flex-direction:column;gap:8px">
+          <span class="sk" style="font-size:.65rem">IACSIT · #80350830</span>
+          <span class="sk" style="font-size:.65rem">theIRED · #SM10100051580</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- GITHUB -->
+<section id="github">
+  <div class="w">
+    <div class="rv"><h2 class="sh">Open <em>Source</em></h2></div>
+    <div class="gh-wrap rv">
+      <div class="gh-top" id="gh-top">
+        <img class="gh-av" id="gh-av" src="" alt=""/>
+        <div id="gh-info">
+          <div class="gh-nn" id="gh-nn">Loading...</div>
+          <div class="gh-un">@shoaib-devpy</div>
+          <div class="gh-bio" id="gh-bio"></div>
+          <div class="gh-nums" id="gh-nums"></div>
+        </div>
+        <a href="https://github.com/shoaib-devpy" target="_blank" class="gh-go">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          View All Repos
+        </a>
+      </div>
+      <div id="repos-grid" class="repos">
+        <div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--muted);font-size:.8rem;font-family:'JetBrains Mono',monospace;letter-spacing:2px">Loading repositories...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- LINKEDIN -->
+<section id="linkedin">
+  <div class="w">
+    <div class="rv"><h2 class="sh">LinkedIn <em>Profile</em></h2></div>
+    <div class="li-wrap rv">
+      <div class="li-badge-box">
+        <script src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+        <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="large" data-theme="dark" data-type="VERTICAL" data-vanity="iamshoaibhayat" data-version="v1">
+          <a class="badge-base__link LI-simple-link" href="https://www.linkedin.com/in/iamshoaibhayat?trk=profile-badge">Shoaib Hayat</a>
+        </div>
+        <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="li-btn">Connect on LinkedIn</a>
+      </div>
+      <div class="li-info-box">
+        <div class="li-info-box" style="padding:0">
+          <h3 style="font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:rgba(203,213,225,.3);font-family:'JetBrains Mono',monospace;margin-bottom:20px">Quick Links</h3>
+          <ul class="li-links">
+            <li><a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank">Full profile &amp; work history</a></li>
+            <li><a href="https://www.linkedin.com/in/iamshoaibhayat/recent-activity/all/" target="_blank">Latest posts &amp; activity</a></li>
+            <li><a href="https://www.linkedin.com/in/iamshoaibhayat/details/skills/" target="_blank">Endorsed skills</a></li>
+            <li><a href="https://www.linkedin.com/in/iamshoaibhayat/details/recommendations/" target="_blank">Recommendations</a></li>
+          </ul>
+          <div class="li-stats">
+            <div class="li-stat"><div class="v">500+</div><div class="l">Connections</div></div>
+            <div class="li-stat"><div class="v">CEO</div><div class="l">Digital Code</div></div>
+            <div class="li-stat"><div class="v">Dubai</div><div class="l">Based</div></div>
+          </div>
+          <div class="li-notice" style="margin-top:24px">
+            <strong style="color:var(--gold)">ℹ About live feeds:</strong> LinkedIn's API restricts embedding personal post feeds on third-party sites. The badge above is LinkedIn's sanctioned embed. For latest posts visit <a href="https://www.linkedin.com/in/iamshoaibhayat/recent-activity/all/" target="_blank">Recent Activity →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="w">
+    <div class="rv"><h2 class="sh">Awards &amp; <em>Recognition</em></h2></div>
+    <div class="aw-grid rv">
+      <div class="aw"><span class="aw-ico">🥇</span><div class="aw-year">2022</div><div class="aw-title">Blockchain Expert Award</div><div class="aw-org">IBADAT University, Islamabad</div></div>
+      <div class="aw"><span class="aw-ico">🔬</span><div class="aw-year">2019</div><div class="aw-title">Scientific Research Award</div><div class="aw-org">Donghua University, Shanghai</div></div>
+      <div class="aw"><span class="aw-ico">🌟</span><div class="aw-year">2018</div><div class="aw-title">International Outstanding Student</div><div class="aw-org">Donghua University, Shanghai</div></div>
+      <div class="aw"><span class="aw-ico">🎓</span><div class="aw-year">2017</div><div class="aw-title">Master's Fully-Funded Scholarship</div><div class="aw-org">China Scholarship Council, MoE</div></div>
+    </div>
+
+    <div class="rv" style="margin-top:64px">
+      <div class="st">Conferences &amp; Summits</div>
+    </div>
+    <div class="conf-row rv">
+      <div class="conf"><div class="conf-name">🇨🇭 Young Activists Summit</div><div class="conf-loc">United Nations · Geneva, Switzerland</div></div>
+      <div class="conf"><div class="conf-name">🌐 World Blockchain Summit &amp; Blockchain Life</div><div class="conf-loc">Dubai, UAE</div></div>
+      <div class="conf"><div class="conf-name">🪙 Token 2049</div><div class="conf-loc">Dubai, UAE</div></div>
+      <div class="conf"><div class="conf-name">💡 GITEX Global &amp; Expand North Star</div><div class="conf-loc">Dubai, UAE</div></div>
+    </div>
+
+    <div class="rv" style="margin-top:64px">
+      <div class="st">Education</div>
+    </div>
+    <div class="edu-list rv">
+      <div class="edu">
+        <div class="edu-date">Sep 2017 – Jan 2020</div>
+        <div>
+          <div class="edu-deg">Master of Engineering — Computer Science &amp; Technology</div>
+          <div class="edu-uni">Donghua University · Shanghai, China 🇨🇳 · <a href="https://english.dhu.edu.cn/" target="_blank">english.dhu.edu.cn</a></div>
+        </div>
+      </div>
+      <div class="edu">
+        <div class="edu-date">Sep 2012 – Nov 2016</div>
+        <div>
+          <div class="edu-deg">BSc (Hons) — Computer Science</div>
+          <div class="edu-uni">The University of Lahore · Lahore, Pakistan 🇵🇰 · <a href="https://uol.edu.pk/" target="_blank">uol.edu.pk</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- CONNECT -->
+<section id="connect">
+  <div class="w">
+    <div class="rv"><h2 class="sh">Let's <em>Collaborate</em></h2></div>
+    <p class="rv" style="font-size:.95rem;font-weight:300;color:rgba(203,213,225,.4);max-width:520px;line-height:1.7;transition-delay:.1s">Whether you're interested in AI research, blockchain projects, enterprise software or academic collaboration — reach out.</p>
+    <div class="ct-grid rv">
+      <a href="mailto:ceo@digitalcode.dev" class="ct-link">
+        <svg class="ct-em" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <div class="ct-label">Email</div>
+        <div class="ct-val">ceo@digitalcode.dev</div>
+      </a>
+      <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="ct-link">
+        <svg class="ct-li" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        <div class="ct-label">LinkedIn</div>
+        <div class="ct-val">iamshoaibhayat</div>
+      </a>
+      <a href="https://github.com/shoaib-devpy" target="_blank" class="ct-link">
+        <svg class="ct-gh" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        <div class="ct-label">GitHub</div>
+        <div class="ct-val">shoaib-devpy</div>
+      </a>
+      <a href="https://orcid.org/0000-0002-2847-3147" target="_blank" class="ct-link">
+        <svg class="ct-or" viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947-.947-.431-.947-.947.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.434h2.297c2.359 0 3.9-1.303 3.9-3.722s-1.491-3.712-3.9-3.712h-2.297z"/></svg>
+        <div class="ct-label">ORCID</div>
+        <div class="ct-val">0000-0002-2847-3147</div>
+      </a>
+      <a href="https://scholar.google.com/citations?user=DYCBADQAAAAJ" target="_blank" class="ct-link">
+        <svg class="ct-gs" viewBox="0 0 24 24"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/></svg>
+        <div class="ct-label">Google Scholar</div>
+        <div class="ct-val">DYCBADQAAAAJ</div>
+      </a>
+      <a href="https://www.webofscience.com/wos/author/record/R-8137-2019" target="_blank" class="ct-link">
+        <svg class="ct-wo" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <div class="ct-label">Web of Science</div>
+        <div class="ct-val">R-8137-2019</div>
+      </a>
+    </div>
+    <div class="ct-info rv">
+      <div class="ct-inf">📍 <strong>Dubai, UAE &amp; Islamabad, Pakistan</strong></div>
+      <div class="ct-inf">📞 UAE: <strong>(+971) 563 261 855</strong></div>
+      <div class="ct-inf">📞 PK: <strong>(+92) 333 607 0855</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Designed &amp; built by <strong>Shoaib Hayat</strong> · AI Researcher &amp; Blockchain Engineer · © 2026</p>
+  <p>shoaibhayat.github.io</p>
+</footer>
+
+<script>
+// ── Loader ───────────────────────────────────────────────
+(function(){
+  const f=document.getElementById('ldf'),p=document.getElementById('ldp'),l=document.getElementById('loader');
+  const msgs=['Initialising...','Neural sync...','Blockchain forge...','Live APIs...','Almost ready...'];
+  let pct=0;
+  const iv=setInterval(()=>{
+    pct+=Math.random()*14+4; if(pct>100)pct=100;
+    f.style.width=pct+'%';
+    p.textContent=msgs[Math.min(Math.floor(pct/22),msgs.length-1)];
+    if(pct>=100){clearInterval(iv);setTimeout(()=>l.classList.add('out'),400)}
+  },120);
+})();
+
+// ── Three.js — Flowing Particle Wave Grid ────────────────
+(function(){
+  const canvas=document.getElementById('cv');
+  const R=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+  R.setPixelRatio(Math.min(devicePixelRatio,1.8));
+  R.setSize(innerWidth,innerHeight);
+  R.setClearColor(0x01010a,1);
+
+  const S=new THREE.Scene();
+  const C=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,400);
+  C.position.set(0,14,28);
+  C.lookAt(0,-2,0);
+
+  // ── Wave grid — the "infinite field" effect ──
+  const GW=110, GH=70, SEP=1.2;
+  const gCount=GW*GH;
+  const gPos=new Float32Array(gCount*3);
+  const gCol=new Float32Array(gCount*3);
+  const baseY=new Float32Array(gCount);
+
+  for(let iz=0;iz<GH;iz++){
+    for(let ix=0;ix<GW;ix++){
+      const idx=iz*GW+ix;
+      const x=(ix-GW/2)*SEP;
+      const z=(iz-GH/2)*SEP-8;
+      gPos[idx*3]=x; gPos[idx*3+1]=0; gPos[idx*3+2]=z;
+      baseY[idx]=0;
+      // depth fade — far points darker
+      const df=1-Math.pow(iz/GH,.5)*.7;
+      gCol[idx*3]=0.12*df; gCol[idx*3+1]=0.06*df; gCol[idx*3+2]=0.35*df;
+    }
+  }
+
+  const gGeo=new THREE.BufferGeometry();
+  gGeo.setAttribute('position',new THREE.BufferAttribute(gPos,3));
+  gGeo.setAttribute('color',new THREE.BufferAttribute(gCol,3));
+  const gMat=new THREE.PointsMaterial({
+    size:.06,vertexColors:true,transparent:true,opacity:1,
+    blending:THREE.AdditiveBlending,sizeAttenuation:true
+  });
+  const grid=new THREE.Points(gGeo,gMat);
+  S.add(grid);
+
+  // ── Sparse floating nodes ── (neural dots above the grid)
+  const nCount=36;
+  const npos=[], nmesh=[];
+  const nCols=[0x8b5cf6,0xa78bfa,0x06b6d4,0x7c3aed];
+  for(let i=0;i<nCount;i++){
+    const x=(Math.random()-.5)*60;
+    const z=(Math.random()-.5)*40-8;
+    const y=Math.random()*4+1;
+    const pos=new THREE.Vector3(x,y,z);
+    npos.push(pos);
+    const r=Math.random()<.2?.08:.04;
+    const c=nCols[Math.floor(Math.random()*nCols.length)];
+    const m=new THREE.Mesh(
+      new THREE.SphereGeometry(r,5,5),
+      new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.7,blending:THREE.AdditiveBlending})
+    );
+    m.position.copy(pos); S.add(m);
+    nmesh.push({m,fy:y,fo:Math.random()*Math.PI*2});
+  }
+
+  // ── Sparse connection lines ──
+  const lp=[], lc=[];
+  const cA=new THREE.Color(0x8b5cf6), cB=new THREE.Color(0x06b6d4);
+  const edges=[];
+  for(let a=0;a<nCount;a++) for(let b=a+1;b<nCount;b++){
+    const d=npos[a].distanceTo(npos[b]);
+    if(d<14){
+      edges.push([a,b]);
+      lp.push(npos[a].x,npos[a].y,npos[a].z,npos[b].x,npos[b].y,npos[b].z);
+      const c=cA.clone().lerp(cB,d/14);
+      lc.push(c.r,c.g,c.b,c.r,c.g,c.b);
+    }
+  }
+  if(lp.length){
+    const lg=new THREE.BufferGeometry();
+    lg.setAttribute('position',new THREE.Float32BufferAttribute(lp,3));
+    lg.setAttribute('color',new THREE.Float32BufferAttribute(lc,3));
+    S.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.07,blending:THREE.AdditiveBlending})));
+  }
+
+  // ── Pulses ──
+  const pulses=[];
+  if(edges.length){
+    const pGeo=new THREE.SphereGeometry(.042,4,4);
+    for(let k=0;k<20;k++){
+      const mat=new THREE.MeshBasicMaterial({color:Math.random()<.6?0x8b5cf6:0xf59e0b,
+        transparent:true,opacity:.8,blending:THREE.AdditiveBlending});
+      const m=new THREE.Mesh(pGeo,mat); S.add(m);
+      pulses.push({m,ei:Math.floor(Math.random()*edges.length),t:Math.random(),
+        spd:.004+Math.random()*.006,col:mat.color});
+    }
+  }
+
+  // ── Mouse ──
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{
+    mx=(e.clientX/innerWidth-.5)*2;
+    my=(e.clientY/innerHeight-.5)*2;
+  });
+
+  window.addEventListener('resize',()=>{
+    C.aspect=innerWidth/innerHeight; C.updateProjectionMatrix();
+    R.setSize(innerWidth,innerHeight);
+  });
+
+  // ── Animate ──
+  let t=0;
+  const posAttr=gGeo.attributes.position;
+  const colAttr=gGeo.attributes.color;
+
+  function animate(){
+    requestAnimationFrame(animate); t+=.012;
+
+    // Wave grid update
+    for(let iz=0;iz<GH;iz++){
+      for(let ix=0;ix<GW;ix++){
+        const idx=iz*GW+ix;
+        const x=posAttr.getX(idx);
+        const z=posAttr.getZ(idx);
+        // multiple overlapping sine waves for organic feel
+        const wave=
+          Math.sin(x*.18+t*.9)*.55+
+          Math.sin(z*.14+t*.6)*.45+
+          Math.sin((x+z)*.09+t*.5)*.35;
+        posAttr.setY(idx,wave);
+        // colour shifts with height
+        const norm=(wave+1.35)/2.7; // 0-1
+        const df=1-Math.pow(iz/GH,.6)*.65;
+        colAttr.setXYZ(idx,
+          0.08*df+norm*.22*df,
+          0.02*df+norm*.04*df,
+          0.28*df+norm*.32*df
+        );
+      }
+    }
+    posAttr.needsUpdate=true;
+    colAttr.needsUpdate=true;
+
+    // Float nodes
+    nmesh.forEach(n=>{n.m.position.y=n.fy+Math.sin(t*.7+n.fo)*.15;});
+
+    // Pulses
+    pulses.forEach(p=>{
+      p.t+=p.spd; if(p.t>=1){p.t=0;p.ei=Math.floor(Math.random()*edges.length);p.col.setHex(Math.random()<.6?0x8b5cf6:0xf59e0b);}
+      const[a,b]=edges[p.ei]||[0,1];
+      if(npos[a]&&npos[b]) p.m.position.lerpVectors(npos[a],npos[b],p.t);
+    });
+
+    // Camera gentle drift
+    C.position.x+=(mx*3-C.position.x)*.018;
+    C.position.y+=(14-my*2-C.position.y)*.018;
+    C.lookAt(0,-2,0);
+
+    R.render(S,C);
+  }
+  animate();
+})();
+
+// ── Cursor ───────────────────────────────────────────────
+(function(){
+  const d=document.getElementById('cur-d'),r=document.getElementById('cur-r');
+  let rx=0,ry=0,cx=0,cy=0;
+  document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;});
+  (function loop(){
+    rx+=(cx-rx)*.12; ry+=(cy-ry)*.12;
+    d.style.left=cx+'px'; d.style.top=cy+'px';
+    r.style.left=rx+'px'; r.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  })();
+})();
+
+// ── Scroll progress ──────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  const p=(scrollY/(document.body.scrollHeight-innerHeight))*100;
+  document.getElementById('prog').style.width=p+'%';
+  document.getElementById('nav').classList.toggle('sc',scrollY>60);
+});
+
+// ── Typewriter ───────────────────────────────────────────
+(function(){
+  const roles=['AI Researcher','Blockchain Engineer','Tech Entrepreneur','Software Architect','IEEE Access Reviewer','CEO @ Digital Code'];
+  let ri=0,ci=0,del=false;
+  const el=document.getElementById('tw');
+  setInterval(()=>{
+    const r=roles[ri];
+    if(!del){el.textContent=r.slice(0,++ci);if(ci===r.length){del=true;setTimeout(()=>{},900)}}
+    else{el.textContent=r.slice(0,--ci);if(ci===0){del=false;ri=(ri+1)%roles.length}}
+  },del?55:85);
+})();
+
+// ── Counter animation ────────────────────────────────────
+(function(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.n[data-t]').forEach(el=>{
+          const t=parseInt(el.dataset.t);
+          let n=0; const iv=setInterval(()=>{
+            n=Math.min(n+1,t); el.textContent=n+(t>=8?'+':'');
+            if(n>=t)clearInterval(iv);
+          },50);
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.3});
+  const hero=document.getElementById('hero');
+  if(hero)obs.observe(hero);
+})();
+
+// ── Reveal on scroll ─────────────────────────────────────
+(function(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}});
+  },{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+})();
+
+// ── GitHub Live API ──────────────────────────────────────
+(async function(){
+  const GH='shoaib-devpy';
+  try{
+    const [ur,rr]=await Promise.all([
+      fetch(`https://api.github.com/users/${GH}`),
+      fetch(`https://api.github.com/users/${GH}/repos?sort=updated&per_page=9&type=public`)
+    ]);
+    const u=await ur.json(), repos=await rr.json();
+    // Profile
+    const av=document.getElementById('gh-av');
+    if(av&&u.avatar_url){av.src=u.avatar_url;av.style.display='block'}
+    const nn=document.getElementById('gh-nn');
+    if(nn)nn.textContent=u.name||u.login;
+    const bio=document.getElementById('gh-bio');
+    if(bio&&u.bio)bio.textContent=u.bio;
+    const nums=document.getElementById('gh-nums');
+    if(nums)nums.innerHTML=`<span>Repos: <strong>${u.public_repos}</strong></span><span>Followers: <strong>${u.followers}</strong></span><span>Following: <strong>${u.following}</strong></span>`;
+    // Repos
+    const grid=document.getElementById('repos-grid');
+    if(grid&&Array.isArray(repos)){
+      const langColors={'Python':'#3572A5','JavaScript':'#f1e05a','TypeScript':'#2b7489','HTML':'#e34c26','CSS':'#563d7c','Solidity':'#AA6746','Shell':'#89e051','Jupyter Notebook':'#DA5B0B'};
+      grid.innerHTML=repos.filter(r=>!r.fork).slice(0,9).map(r=>`
+        <a href="${r.html_url}" target="_blank" class="repo">
+          <div class="repo-name">${r.name}</div>
+          <div class="repo-desc">${r.description||'No description'}</div>
+          <div class="repo-foot">
+            ${r.language?`<span class="repo-lang"><span class="rd" style="background:${langColors[r.language]||'#6e7681'}"></span>${r.language}</span>`:''}
+            <span class="repo-stars">★ ${r.stargazers_count}</span>
+            <span class="repo-ago">${timeAgo(r.updated_at)}</span>
+          </div>
+          ${r.topics&&r.topics.length?`<div class="repo-topics">${r.topics.slice(0,3).map(t=>`<span class="rt">${t}</span>`).join('')}</div>`:''}
+        </a>`).join('');
+    }
+  }catch(e){
+    const g=document.getElementById('repos-grid');
+    if(g)g.innerHTML=`<a href="https://github.com/${GH}" target="_blank" class="repo" style="grid-column:1/-1;text-align:center"><div class="repo-name">github.com/${GH}</div><div class="repo-desc">Click to view all repositories</div></a>`;
+  }
+  function timeAgo(d){
+    const s=Math.floor((Date.now()-new Date(d))/1000);
+    if(s<3600)return Math.floor(s/60)+'m ago';
+    if(s<86400)return Math.floor(s/3600)+'h ago';
+    if(s<2592000)return Math.floor(s/86400)+'d ago';
+    return Math.floor(s/2592000)+'mo ago';
+  }
+})();
+</script>
+</body>
+</html>
