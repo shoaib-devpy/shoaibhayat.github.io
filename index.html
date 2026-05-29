@@ -293,6 +293,21 @@ hr.div{border:none;height:1px;background:linear-gradient(90deg,transparent,rgba(
 
 /* ── LinkedIn ── */
 .badge-base__link.LI-simple-link{display:none!important}
+.li-card{
+  background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.15);
+  padding:32px;display:flex;flex-direction:column;align-items:center;
+  gap:14px;text-align:center;width:100%}
+.li-card-photo{
+  width:110px;height:110px;border-radius:50%;overflow:hidden;
+  border:2px solid rgba(139,92,246,.35);
+  box-shadow:0 0 24px rgba(139,92,246,.25);flex-shrink:0}
+.li-card-photo img{width:100%;height:100%;object-fit:cover;object-position:top}
+.li-card-name{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;
+  color:#fff;letter-spacing:1px}
+.li-card-title{font-size:.78rem;color:var(--purple3);font-weight:500;letter-spacing:.5px}
+.li-card-sub{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;
+  letter-spacing:.5px}
+.li-card-divider{width:40px;height:1px;background:rgba(139,92,246,.25)}
 .li-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(139,92,246,.08)}
 .li-badge-box{background:var(--bg);padding:40px;display:flex;flex-direction:column;
   align-items:flex-start;gap:20px}
@@ -844,11 +859,19 @@ footer strong{color:rgba(203,213,225,.4);font-weight:400}
     <div class="rv"><h2 class="sh">LinkedIn <em>Profile</em></h2></div>
     <div class="li-wrap rv">
       <div class="li-badge-box">
-        <script src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-        <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="large" data-theme="dark" data-type="VERTICAL" data-vanity="iamshoaibhayat" data-version="v1">
-          <a class="badge-base__link LI-simple-link" href="https://www.linkedin.com/in/iamshoaibhayat?trk=profile-badge">Shoaib Hayat</a>
+        <div class="li-card">
+          <div class="li-card-photo">
+            <img src="Shoaib_Hayat_Photo-removebg-preview.png" alt="Shoaib Hayat"/>
+          </div>
+          <div class="li-card-name">Shoaib Hayat</div>
+          <div class="li-card-title">CEO &amp; Founder · Digital Code</div>
+          <div class="li-card-sub">AI Researcher · Blockchain Engineer · Dubai, UAE</div>
+          <div class="li-card-divider"></div>
+          <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="li-btn" style="width:100%;text-align:center;display:block;box-sizing:border-box">
+            <svg style="width:14px;height:14px;fill:currentColor;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            Connect on LinkedIn
+          </a>
         </div>
-        <a href="https://www.linkedin.com/in/iamshoaibhayat/" target="_blank" class="li-btn">Connect on LinkedIn</a>
       </div>
       <div class="li-info-box">
         <div class="li-info-box" style="padding:0">
