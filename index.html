@@ -399,8 +399,11 @@ footer strong{color:rgba(203,213,225,.4);font-weight:400}
   width:100%;height:auto;display:block;
   opacity:.88;
   filter:drop-shadow(0 0 36px rgba(139,92,246,.3)) drop-shadow(0 0 70px rgba(6,182,212,.12));
-  -webkit-mask-image:linear-gradient(to bottom,black 55%,transparent 100%);
-  mask-image:linear-gradient(to bottom,black 55%,transparent 100%)}
+}
+.h-photo-frame::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:55%;pointer-events:none;
+  background:linear-gradient(to bottom,transparent 0%,var(--bg) 85%)}
 .hpc{
   position:absolute;width:22px;height:22px;
   border-style:solid;border-color:rgba(167,139,250,.65);
@@ -988,7 +991,6 @@ footer strong{color:rgba(203,213,225,.4);font-weight:400}
 <!-- FOOTER -->
 <footer>
   <p>Designed &amp; built by <strong>Shoaib Hayat</strong> · AI Researcher &amp; Blockchain Engineer · © 2026</p>
-  <p>shoaibhayat.github.io</p>
 </footer>
 
 <script>
@@ -1188,7 +1190,7 @@ window.addEventListener('scroll',()=>{
 
 // ── Typewriter ───────────────────────────────────────────
 (function(){
-  const roles=['AI Researcher','Blockchain Engineer','Tech Entrepreneur','Software Architect','IEEE Access Reviewer','CEO @ Digital Code'];
+  const roles=['CEO @ Digital Code','AI Researcher','Blockchain Engineer','Tech Entrepreneur','Software Architect','IEEE Access Reviewer'];
   let ri=0,ci=0,del=false;
   const el=document.getElementById('tw');
   setInterval(()=>{
